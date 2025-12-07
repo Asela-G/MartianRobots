@@ -4,12 +4,12 @@ namespace MartianRobots.Domain.Interfaces
 {
     internal interface ICommandStrategy
     {
-        void ProcessCommand(Robot robot, char command);
+        void ProcessCommand(Robot robot, char command, Grid grid);
     }
 
     internal class TurnLeftCommandStrategy : ICommandStrategy
     {
-        public void ProcessCommand(Robot robot, char command)
+        public void ProcessCommand(Robot robot, char command, Grid grid)
         {
             robot.TurnLeft();
         }
@@ -17,7 +17,7 @@ namespace MartianRobots.Domain.Interfaces
 
     internal class TurnRightCommandStrategy : ICommandStrategy
     {
-        public void ProcessCommand(Robot robot, char command)
+        public void ProcessCommand(Robot robot, char command, Grid grid)
         {
             robot.TurnRight();
         }
@@ -25,9 +25,9 @@ namespace MartianRobots.Domain.Interfaces
 
     internal class MoveForwardCommandStrategy : ICommandStrategy
     {
-        public void ProcessCommand(Robot robot, char command)
+        public void ProcessCommand(Robot robot, char command, Grid grid)
         {
-            robot.MoveForward();
+            robot.MoveForward(grid);
         }
     }
 }

@@ -1,10 +1,7 @@
-﻿// See https://aka.ms/new-console-template for more information
-using MartianRobots.Domain;
+﻿using MartianRobots.Domain;
 using MartianRobots.Domain.Model;
 
-Console.WriteLine("Enter the upper-right coordinate of the grid on first line, followed by a pair of lines per robot representing positions (format: X Y [N|S|E|W]) and instructions (using letters L,R,F sequence):");
-
-
+Console.WriteLine("Please enter the upper-right coordinate of the grid:");
 var upperRightCoords = Console.ReadLine();
 if (upperRightCoords == null) return;
 
@@ -13,6 +10,7 @@ var marsGrid = new Grid(int.Parse(gridCoordinates[0]), int.Parse(gridCoordinates
 
 while (true)
 {
+    Console.WriteLine("Enter the robot position (format: X Y [N|S|E|W]):");
     var positionInput = Console.ReadLine();
     if (positionInput == null) break;//TODO: Handle input errors
 
@@ -24,15 +22,17 @@ while (true)
         Enum.Parse<Orientation>(positionParts[2])
     );
 
+    Console.WriteLine("Enter the robot instructions (L = Turn Left, R = Turn Right and F = Move Forward):");
     var commandsInput = Console.ReadLine();
     if (commandsInput == null) break;//TODO: Handle input errors
 
     foreach (char command in commandsInput)
     {
         var strategy = CommandTypeStrategyFactory.GetStrategy((CommandType)command);
-        strategy.ProcessCommand(robot, command);
+        strategy.ProcessCommand(robot, command, marsGrid);
     }
 
-    Console.WriteLine($"{robot.Coordinates.X} {robot.Coordinates.Y} {robot.Orientation}");
+    var lostStatus = robot.IsLost ? "LOST" : "";
+    Console.WriteLine($"Output: {robot.Coordinates.X} {robot.Coordinates.Y} {robot.Orientation} {lostStatus}");
 }
 

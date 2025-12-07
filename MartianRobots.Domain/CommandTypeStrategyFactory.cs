@@ -3,7 +3,7 @@ using MartianRobots.Domain.Model;
 
 namespace MartianRobots.Domain
 {
-    public static class CommandTypeStrategyFactory
+    internal static class CommandTypeStrategyFactory
     {
         internal static ICommandStrategy GetStrategy(CommandType commandType)
         {
