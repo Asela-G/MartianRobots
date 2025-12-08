@@ -4,7 +4,6 @@ using NUnit.Framework;
 namespace MartianRobots.Domain.Tests
 {
     [TestFixture]
-    //TODO: Add edge case tests
     public class OrientationExtensionsTests
     {
         [Test]
@@ -26,5 +25,6 @@ namespace MartianRobots.Domain.Tests
             Assert.That(Orientation.S.TurnRight(), Is.EqualTo(Orientation.W));
             Assert.That(Orientation.W.TurnRight(), Is.EqualTo(Orientation.N));
         }
+
     }
 }

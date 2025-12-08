@@ -4,13 +4,8 @@ using NUnit.Framework;
 namespace MartianRobots.Domain.Tests
 {
     [TestFixture]
-    //TODO: Add edge case tests
     public class CoordinatesTests
     {
-        [SetUp]
-        public void Setup()
-        {
-        }
 
         [Test]
         public void MoveForward_North_ShouldIncreaseYCoordinate()
@@ -70,6 +65,22 @@ namespace MartianRobots.Domain.Tests
             // Assert
             Assert.That(newCoordinates.X, Is.EqualTo(1));
             Assert.That(newCoordinates.Y, Is.EqualTo(3));
+        }
+
+        [Test]
+        public void MoveForward_MultipleMoves_ShouldUpdateCoordinatesCorrectly()
+        {
+            // Arrange
+            var initialCoordinates = new Coordinates(1, 2);
+            var orientation = Orientation.N;
+
+            // Act
+            var afterFirstMove = initialCoordinates.MoveForward(orientation);
+            var afterSecondMove = afterFirstMove.MoveForward(orientation);
+
+            // Assert
+            Assert.That(afterSecondMove.X, Is.EqualTo(1));
+            Assert.That(afterSecondMove.Y, Is.EqualTo(4));
         }
 
     }

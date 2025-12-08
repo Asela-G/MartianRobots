@@ -1,38 +1,36 @@
 ﻿using MartianRobots.Domain;
-using MartianRobots.Domain.Model;
 
 Console.WriteLine("Please enter the upper-right coordinate of the grid:");
 var upperRightCoords = Console.ReadLine();
-if (upperRightCoords == null) return;
+if (string.IsNullOrWhiteSpace(upperRightCoords)) return;
 
-var gridCoordinates = upperRightCoords.Split(' ');
-var marsGrid = new Grid(int.Parse(gridCoordinates[0]), int.Parse(gridCoordinates[1]));
-
-while (true)
+try
 {
-    Console.WriteLine("Enter the robot position (format: X Y [N|S|E|W]):");
-    var positionInput = Console.ReadLine();
-    if (positionInput == null) break;//TODO: Handle input errors
+    var commandCentre = new CommandCentre(upperRightCoords);
 
-    var positionParts = positionInput.Split(' ');
-    if (positionParts.Length != 3) break;//TODO: Handle input errors
-
-    var robot = new Robot(
-        new Coordinates(int.Parse(positionParts[0]), int.Parse(positionParts[1])),
-        Enum.Parse<Orientation>(positionParts[2])
-    );
-
-    Console.WriteLine("Enter the robot instructions (L = Turn Left, R = Turn Right and F = Move Forward):");
-    var commandsInput = Console.ReadLine();
-    if (commandsInput == null) break;//TODO: Handle input errors
-
-    foreach (char command in commandsInput)
+    while (true)
     {
-        var strategy = CommandTypeStrategyFactory.GetStrategy((CommandType)command);
-        strategy.ProcessCommand(robot, command, marsGrid);
-    }
+        Console.WriteLine("Enter the robot starting position (Format: X Y [N|S|E|W]):");
+        var positionInput = Console.ReadLine();
+        if (string.IsNullOrWhiteSpace(positionInput)) break;
 
-    var lostStatus = robot.IsLost ? "LOST" : "";
-    Console.WriteLine($"Output: {robot.Coordinates.X} {robot.Coordinates.Y} {robot.Orientation} {lostStatus}");
+        Console.WriteLine("Enter the robot instructions (L = Turn Left, R = Turn Right and F = Move Forward):");
+        var commandsInput = Console.ReadLine();
+        if (string.IsNullOrWhiteSpace(commandsInput)) break;
+
+        try
+        {
+            var result = commandCentre.ExecuteRobot(positionInput, commandsInput);
+            Console.WriteLine($"RobotStatus: {result}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
+}
+catch (Exception ex)
+{
+    Console.WriteLine($"Error initializing grid: {ex.Message}");
 }
 

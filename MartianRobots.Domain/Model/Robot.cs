@@ -5,12 +5,17 @@
         internal Coordinates Coordinates { get; private set; }
         internal Orientation Orientation { get; private set; }
         internal bool IsLost { get; private set; }
+        internal Grid Grid { get; private set; }
 
-        internal Robot(Coordinates coordinates, Orientation orientation)
+        internal Robot(Coordinates coordinates, Orientation orientation, Grid grid)
         {
-            this.Coordinates = coordinates;
-            this.Orientation = orientation;
-            this.IsLost = false;
+            if (!grid.IsWithinGridBounds(coordinates))
+                throw new ArgumentOutOfRangeException(nameof(coordinates), "Coordinates must be within grid bounds");
+
+            Coordinates = coordinates;
+            Orientation = orientation;
+            IsLost = false;
+            Grid = grid;
         }
 
         internal void TurnLeft()
@@ -23,17 +28,17 @@
             if (IsLost) return;
             Orientation = Orientation.TurnRight();
         }
-        internal void MoveForward(Grid grid)
+        internal void MoveForward()
         {
             if (IsLost) return;
 
             Coordinates newCoordinates = Coordinates.MoveForward(Orientation);
 
-            if (!grid.IsWithinGridBounds(newCoordinates))
+            if (!Grid.IsWithinGridBounds(newCoordinates))
             {
-                if (!grid.HasScent(Coordinates))
+                if (!Grid.HasScent(Coordinates))
                 {
-                    grid.AddScent(Coordinates);
+                    Grid.AddScent(Coordinates);
                     IsLost = true;
                 }
                 return;
